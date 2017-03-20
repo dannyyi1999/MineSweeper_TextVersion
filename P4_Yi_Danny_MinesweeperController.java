@@ -19,7 +19,7 @@ public class P4_Yi_Danny_MinesweeperController {
 		boolean revealBoard = true;
 		
 		Scanner in = new Scanner(System.in);
-		P4_Yi_Danny_MinesweeperModel model = new P4_Yi_Danny_MinesweeperModel(5, 5, 3);
+		P4_Yi_Danny_MinesweeperModel model = new P4_Yi_Danny_MinesweeperModel(2, 2, 3);
 		model.setGrid(model.getNumRows(), model.getNumCols(), model.getNumMines());
 		System.out.println("Welcome to Minesweeper!");
 		model.printBoard();
@@ -44,9 +44,10 @@ public class P4_Yi_Danny_MinesweeperController {
 			if(revealBoard){
 				model.printStackedBoard();
 			}
+			System.out.println("There are " + model.getNumMines() + " left.");
 		}
 		
-		if(model.getNumRevealed() + model.getNumFlags() + model.getNumMines() >= model.getNumRows() * model.getNumCols()){
+		if(model.getNumRevealed() + model.getNumFlags() + model.getNumMines() == model.getNumRows() * model.getNumCols()){
 			System.out.println("CONGRATS! YOU WIN!!!!");
 		}else {
 			System.out.println("Oh No! You Lose!");
