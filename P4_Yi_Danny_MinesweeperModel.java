@@ -1,4 +1,3 @@
-
 public class P4_Yi_Danny_MinesweeperModel implements P4_Yi_Danny_MSModel{
 	
 	MinePane[][] board;
@@ -24,9 +23,15 @@ public class P4_Yi_Danny_MinesweeperModel implements P4_Yi_Danny_MSModel{
 
 	@Override
 	public void setFlag(int row, int col) {
-		board[row][col].setValue(9);
-		numMines--;
-		numFlags++;
+		if(board[row][col].isFlagged()){
+			board[row][col].setFlagged(false);
+			numMines++;
+			numFlags--;
+		}else {
+			board[row][col].setFlagged(true);
+			numMines--;
+			numFlags++;
+		}
 	}
 	
 	@Override
@@ -36,14 +41,15 @@ public class P4_Yi_Danny_MinesweeperModel implements P4_Yi_Danny_MSModel{
 
 	@Override
 	public void reveal(int row, int col) {
-		numRevealed++;
-		if(row >= 0 && row < getNumRows() && col >= 0 && col < getNumCols() && !board[row][col].isVisible()){
+		if(row >= 0 && row < getNumRows() && col >= 0 && col < getNumCols() && !board[row][col].isVisible()
+				&& !board[row][col].isFlagged()){
 			board[row][col].setVisible(true);
 			if(board[row][col].getValue() == -1){
 				gameOver = true;
 			}else if(board[row][col].getValue() > 0 && board[row][col].getValue() < 9){
-
+				numRevealed++;
 			}else if(board[row][col].getValue() == 0){
+				numRevealed++;
 				reveal(row - 1, col - 1);
 				reveal(row - 1, col);
 				reveal(row - 1, col + 1);
@@ -53,6 +59,9 @@ public class P4_Yi_Danny_MinesweeperModel implements P4_Yi_Danny_MSModel{
 				reveal(row + 1, col);
 				reveal(row + 1, col + 1);
 			}
+		}
+		if(numRevealed + numFlags + numMines == board.length * board[0].length){
+			gameOver = true;
 		}
 	}
 
@@ -129,8 +138,8 @@ public class P4_Yi_Danny_MinesweeperModel implements P4_Yi_Danny_MSModel{
 						System.out.print(board[row][col].getValue() + " ");
 					}
 				}else {
-					if(board[row][col].getValue() == 9){
-						System.out.println("f ");
+					if(board[row][col].isFlagged()){
+						System.out.print("f ");
 					}else {
 						System.out.print("- ");
 					}
@@ -165,6 +174,7 @@ class MinePane {
 	
 	boolean visible;
 	int value;
+	boolean flagged = false;
 	
 	public MinePane(int value, boolean visible){
 		this.value = value;
@@ -185,5 +195,13 @@ class MinePane {
 	
 	public void setVisible(boolean visible){
 		this.visible = visible;
+	}
+	
+	public boolean isFlagged(){
+		return flagged;
+	}
+	
+	public void setFlagged(boolean flag){
+		flagged = flag;
 	}
 }
